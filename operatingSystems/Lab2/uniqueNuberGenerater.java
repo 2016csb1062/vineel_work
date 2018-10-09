@@ -16,7 +16,9 @@ class uniqueNumberGenerater
 	static Device dev;
 	static long n;
 	static volatile boolean done;
-	static Lock lock;
+	static Long computeDelay;
+	static Object lock = new Object();
+
 	public static class MyThread extends Thread 
 	{
 		public void run()
@@ -24,59 +26,59 @@ class uniqueNumberGenerater
 			while (!done) 
 			{
 				//------------Synchronize i and baseIndex
-				int locali ;
+				Long locali ;
 				Long localBaseIndex ;
-				Long localii;
-				synchronized(this)
+				Long base;
+				synchronized(lock)
 				{
-					i+=1;
-					localii =  i;
-					if(i % endLoop == 0)
-					{
-						baseIndex+=1;
-					}
-					locali = (int)(i%endLoop);
+					baseIndex+=1;
 					localBaseIndex = baseIndex;
+					locali = i;
+					i += endLoop;
+					base =uniqueNumGenerated.takeOldestGeneratedNumber(localBaseIndex);
+					while(base == null)
+					{
+						try
+						{
+							lock.wait();
+						}
+						catch(InterruptedException e)
+						{
+
+						}
+						base =uniqueNumGenerated.takeOldestGeneratedNumber(localBaseIndex);
+					}
+					uniqueNumGenerated.removeKey(localBaseIndex);
 				}
 
-				//-------------GetBase
-				Long base = uniqueNumGenerated.takeOldestGeneratedNumber(localBaseIndex);
-				while(base==null)
+				//--------------------for loop
+				for(int j=0;j<endLoop;j++)
 				{
-				 	base = uniqueNumGenerated.takeOldestGeneratedNumber(localBaseIndex);
-				 	if (uniqueNumGenerated.length() >= n) 
+					Long nxtNumber = 0l;
+					//-------------Get The NextNumber
+					try
+					{
+						nxtNumber = dev.f(base,j);
+						
+					}
+					catch(InterruptedException e)
+					{
+
+					}
+
+					uniqueNumGenerated.recordGeneratedNumber(locali+j,nxtNumber);
+					if (uniqueNumGenerated.length() >= n)
 					{
 						done = true;
 						break;
 					}
 				}
 
-				//-------------Get The NextNumber
-				Long nxtNumber = 0l;
-				boolean deviceWorked = false;
-				while(!deviceWorked)
+				synchronized(lock)
 				{
-					try
-					{
-						nxtNumber = dev.f(base, locali);
-						deviceWorked = true;
-						if(nxtNumber == null)
-						{
-							deviceWorked = false;
-						}
-					}
-					catch(InterruptedException e)
-					{
-						deviceWorked = false;
-					}
+					lock.notifyAll();
 				}
 
-				uniqueNumGenerated.recordGeneratedNumber(localii+1,nxtNumber);
-				if (uniqueNumGenerated.length() >= n) 
-				{
-					done = true;
-					break;
-				}
 			}
 		}
 		
@@ -89,7 +91,6 @@ class uniqueNumberGenerater
 		Integer nOfThreads = Integer.parseInt(args[1]);
 		String deviceType = args[2];
 		Long bootDelay ;
-		Long computeDelay;
 		
 		if(args.length>3)
 			computeDelay = Long.parseLong(args[3]);
@@ -101,13 +102,14 @@ class uniqueNumberGenerater
 			bootDelay = 250l;
 
 		//-------------- Initializing global data
-		uniqueNumGenerated = new SomeDataStructure();
+		int temp = (int)n;
+		uniqueNumGenerated = new SomeDataStructure(temp);
 		uniqueNumGenerated.recordGeneratedNumber(0l,2l);
 		baseIndex = -1l;
-		i=-1l;
+		i=1l;
 		endLoop = Device.MULTIPLIERS.length;
 		done = false;
-		lock = new ReentrantLock();
+
 		//---//Device Creation
 		if(deviceType.equals("real"))
 		{

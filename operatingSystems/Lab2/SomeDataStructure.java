@@ -13,10 +13,10 @@ public class SomeDataStructure
 	LinkedHashSet <Long> hashSet;
 
 	//constructor
-	public SomeDataStructure()
+	public SomeDataStructure(int n)
 	{
-		series = new HashMap<Long,Long>();
-		hashSet = new LinkedHashSet<Long>();
+		series = new HashMap<Long,Long>(n);
+		hashSet = new LinkedHashSet<Long>(n);
 	}
 
 	//get the value of given index/key
@@ -39,6 +39,11 @@ public class SomeDataStructure
 	{
 		Long siz = (long)hashSet.size();
 		return siz;  
+	}
+
+	void removeKey(Long key)
+	{
+		series.remove(key);
 	}
 
 }
