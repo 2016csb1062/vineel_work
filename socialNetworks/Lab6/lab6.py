@@ -20,6 +20,7 @@ def randomRelationNetwork(n):
 #stabilizeNetwork
 #arguments : a relationShip network
 #stabilizes the relationship network
+#returns dict which has edge (u,v) as key and sign of the edge as value
 def stabilizeNetwork(G):
 	unstableSigns = []
 	unstable = True
@@ -48,8 +49,7 @@ def stabilizeNetwork(G):
 					edgeLabels[(tri[0],tri[1])] = "-"
 
 
-
-	nx.set_edge_attributes(G,'sign',edgeLabels)
+	return edgeLabels;
 
 
 
@@ -151,9 +151,9 @@ n = 200
 G = randomRelationNetwork(n)
 
 #stabilzes the random network created
-stabilizeNetwork(G)
+edgeLabels = stabilizeNetwork(G)
 
-print "Random Balanced Network is Created.... "
+print "Random Balanced Network of "+str(n)+" nodes is Created .... "
 
 #display the network
 """pos = nx.circular_layout(G)
@@ -170,7 +170,6 @@ epsilon = 0
 
 #Add Error in the network
 print "Adding Error ....."
-edgeLabels = nx.get_edge_attributes(G,'sign');
 randomEdge = random.choice(edgeLabels.keys())
 while(maxError>epsilon):
 	randomEdge = random.choice(edgeLabels.keys())
@@ -188,7 +187,6 @@ else:
 epsilon = calEpsilon(edgeLabels,n)
 
 print "Created a Random Network with "+ str((1-epsilon)*100)+ " % balanced triangles....."
-nx.set_edge_attributes(G,'sign',edgeLabels)
 """
 print "displaying a network with "+str((1-epsilon)*100)+" % balanced triangles....."
 pos = nx.circular_layout(G)
