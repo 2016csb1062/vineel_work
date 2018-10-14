@@ -1,0 +1,5 @@
+Processes	Allocated	Requested	Available at time t1
+P1	{1,0,1}	{0,1,1}	{0,0,1}
+P2	{1,1,0}	{1,0,0}
+P3	{0,1,0}	{0,0,1}
+p4	{0,1,0}	{1,2,0}
