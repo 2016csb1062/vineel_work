@@ -6,7 +6,7 @@ class DeadLockDetect
 	static ArrayList <ProcessObject> processList;
 	static Integer [] resourcesLeftOut;
 
-	public static void read(String filePath)
+	public static void read(String fileFormat,String filePath)
 	{
 		Scanner scanner=null;
 		processList = new ArrayList <ProcessObject>();
@@ -19,15 +19,28 @@ class DeadLockDetect
         	System.out.println("Error at line 17 : " + e);
         }
         String line=scanner.nextLine();
+        String delimeter;
+
         while(scanner.hasNextLine())
         {
         	line = scanner.nextLine();
-        	String [] cols = line.split("\t");	
-        	//Extract Process Id
+
+        	String [] cols =null;
+            int extraChars = 1;
+            if(fileFormat .equals("csv"))
+            {
+                cols = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                extraChars = 2;
+            }
+            else
+            {
+                line.split("\t");	
+            }
+            //Extract Process Id
         	String processId = cols[0];
         	
         	//Extract allocated Resources
-        	String [] allocatedChars = cols[1].substring(1,cols[1].length()-1).split(",");
+        	String [] allocatedChars = cols[1].substring(extraChars,cols[1].length()-extraChars).split(",");
         	Integer [] allocatedResouces = new Integer [allocatedChars.length];
         	for (int i=0;i<allocatedChars.length;i++)
         	{
@@ -35,7 +48,7 @@ class DeadLockDetect
         	}
 
         	//Extract requested Resources 
-        	String [] requestedChars = cols[2].substring(1,cols[1].length()-1).split(",");
+        	String [] requestedChars = cols[2].substring(extraChars,cols[1].length()-extraChars).split(",");
         	Integer [] requestedResources = new Integer [requestedChars.length];
         	for(int i=0;i<requestedChars.length;i++)
         	{
@@ -45,7 +58,7 @@ class DeadLockDetect
         	//Extract remaining resources
         	if(cols.length>3)
         	{
-        		String [] resourcesLeftOutChars = cols[3].substring(1,cols[1].length()-1).split(",");
+        		String [] resourcesLeftOutChars = cols[3].substring(extraChars,cols[1].length()-extraChars).split(",");
         		resourcesLeftOut = new Integer[resourcesLeftOutChars.length];
         		for(int i=0;i<resourcesLeftOutChars.length;i++)
         		{
@@ -82,12 +95,12 @@ class DeadLockDetect
     			{
     				processTerminated[i] = true;
     				numOfProcessTerminated+=1;
-    				System.out.println("Resources Left out :");
+    				/*System.out.println("Resources Left out :");
     				for(int j=0;j<resourcesLeftOut.length;j++)
     				{
     					System.out.print(resourcesLeftOut[j]+" ");
     				}
-    				System.out.println();
+    				System.out.println();*/
     			}
     		}
 
@@ -135,7 +148,7 @@ class DeadLockDetect
 
 		// resources left 
 
-		read(argv[1]);
+		read(argv[0],argv[1]);
 		/*for(int i=0;i<processList.size();i++)
 		{
 			System.out.println("-----------------------");
