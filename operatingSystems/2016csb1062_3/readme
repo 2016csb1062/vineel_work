@@ -1,0 +1,41 @@
+submitter name: Vineel Kumar Raj BE
+Entry No : 2016csb1062
+
+=======================================
+
+Compile And Running :
+
+javac *.java
+java DeadLockDetect fileFormat(csv/tsv) inputfile
+
+Ex:
+	java DeadLockDetect csv input.csv
+
+----------------------------------------
+
+Sample InputFormat:
+
+csv:
+P1,"{1,0,1}","{0,1,1}","{0,0,1}"
+P2,"{1,1,0}","{1,0,0}"
+P3,"{0,1,0}","{0,0,1}"
+p4,"{0,1,0}","{1,2,0}"
+
+tsv:
+P1	{1,0,1}	{0,1,1}	{0,0,1}
+P2	{1,1,0}	{1,0,0}	
+P3	{0,1,0}	{0,0,1}	
+p4	{0,1,0}	{1,2,0}	
+
+-----------------------------------------
+
+Description:
+the programme checks the presense of deadlock in the system state present in the file.and if it is present it print the processes and resources that are in the deadlock state.
+
+Algorithm:
+1)first programme parse the data in the file and store data into objects of process(processId,allocatedResources,RequestedResources) and array of integers(Available resources)
+2)for every process it check if it can terminate with the available resources if it can , it terminates the process and releases the resources held by the process
+3)if all the process are terminated then there is no deadlock; if no process terminate then there is a deadlock and all the process that do not terminate are in deadlock state; else go to 2.
+
+-----------------------------------------
+

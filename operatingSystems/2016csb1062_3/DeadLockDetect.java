@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
 
+
+
+
 class DeadLockDetect
 {
 	static ArrayList <ProcessObject> processList;
@@ -18,7 +21,8 @@ class DeadLockDetect
         {
         	System.out.println("Error at line 17 : " + e);
         }
-        String line=scanner.nextLine();
+        String line;
+        //line=scanner.nextLine();
         String delimeter;
 
         while(scanner.hasNextLine())
@@ -34,7 +38,7 @@ class DeadLockDetect
             }
             else
             {
-                line.split("\t");	
+                cols = line.split("\t");	
             }
             //Extract Process Id
         	String processId = cols[0];
@@ -63,11 +67,16 @@ class DeadLockDetect
         		for(int i=0;i<resourcesLeftOutChars.length;i++)
         		{
         			resourcesLeftOut[i] = Integer.valueOf(resourcesLeftOutChars[i]);
-        		} 
+        		}
+               /* for(int i=0;i<resourcesLeftOutChars.length;i++)
+                {
+                    System.out.println(resourcesLeftOut[i]);
+                }*/
         	}
 
         	//create process and add to processLIst
         	ProcessObject temp = new ProcessObject(processId,allocatedResouces,requestedResources);
+            //temp.printProcess();
         	processList.add(temp);
 		}
     }
@@ -120,13 +129,27 @@ class DeadLockDetect
     	{
     		System.out.println("DeadLock Detected !");
     		System.out.println("The processes in the DeadLock are : ");
+            HashSet<Integer> resourcesInLock = new HashSet<Integer>();
     		for(int i=0;i<n;i++)
     		{
     			if(!processList.get(i).terminated)
     			{
     				System.out.println(processList.get(i).id);
+                    for(int j=0;j<processList.get(i).requesting.length;j++)
+                    {
+                        if(processList.get(i).requesting[j]>resourcesLeftOut[j])
+                        {
+                            resourcesInLock.add(j);
+                        }
+                    }
     			}
     		}
+            Iterator value = resourcesInLock.iterator();
+            System.out.println("Resources : "); 
+            while(value.hasNext())
+            {
+                System.out.println("R"+value.next());
+            }
     	}
 
     	else
