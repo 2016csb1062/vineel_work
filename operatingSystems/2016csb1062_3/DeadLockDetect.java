@@ -6,9 +6,12 @@ import java.util.*;
 
 class DeadLockDetect
 {
+	//contains all the instances of the process
 	static ArrayList <ProcessObject> processList;
+	//contains number of each resouce left out
 	static Integer [] resourcesLeftOut;
 
+	//read and update the processList and resorcesLeft
 	public static void read(String fileFormat,String filePath)
 	{
 		Scanner scanner=null;
@@ -22,7 +25,7 @@ class DeadLockDetect
         	System.out.println("Error at line 17 : " + e);
         }
         String line;
-        //line=scanner.nextLine();
+        line=scanner.nextLine();
         String delimeter;
 
         while(scanner.hasNextLine())
@@ -68,20 +71,16 @@ class DeadLockDetect
         		{
         			resourcesLeftOut[i] = Integer.valueOf(resourcesLeftOutChars[i]);
         		}
-               /* for(int i=0;i<resourcesLeftOutChars.length;i++)
-                {
-                    System.out.println(resourcesLeftOut[i]);
-                }*/
+               
         	}
 
         	//create process and add to processLIst
         	ProcessObject temp = new ProcessObject(processId,allocatedResouces,requestedResources);
-            //temp.printProcess();
         	processList.add(temp);
 		}
     }
 
-
+    //Detect the deadLock from the global values processList and resourcesLeftOut 
     public static void detectDeadLock()
     {
     	int n = processList.size();
@@ -104,12 +103,7 @@ class DeadLockDetect
     			{
     				processTerminated[i] = true;
     				numOfProcessTerminated+=1;
-    				/*System.out.println("Resources Left out :");
-    				for(int j=0;j<resourcesLeftOut.length;j++)
-    				{
-    					System.out.print(resourcesLeftOut[j]+" ");
-    				}
-    				System.out.println();*/
+    				
     			}
     		}
 
@@ -167,23 +161,7 @@ class DeadLockDetect
 			System.out.println("java DeadLockDetect fileFormat(csv/tsv) file");
 			return;
 		}
-		// contains the list of processes at time t
-
-		// resources left 
-
 		read(argv[0],argv[1]);
-		/*for(int i=0;i<processList.size();i++)
-		{
-			System.out.println("-----------------------");
-			processList.get(i).printProcess();
-			System.out.println("-----------------------");
-		}
-
-		for(int i=0;i<resourcesLeftOut.length;i++)
-		{
-			System.out.print(resourcesLeftOut[i]+" ");
-		}
-		System.out.println("");*/
 		detectDeadLock();
 	}
 
