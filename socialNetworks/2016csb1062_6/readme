@@ -1,0 +1,14 @@
+running the programme:
+python 2016csb1062_6.py number_of_node(optional) Max_Error_Ratio(optional)
+
+default: number_of_nodes = 200 
+				 Max_error_Ratio = 0.001
+
+Implementation:
+1)First Create a Random RelationShip Network with n(default = 200) nodes
+2)balance the network created
+3)Add error of at max Max_Error_Ratio (default = 0.001) ie.make at max Max_Error_Ratio of triangles in the network unbalanced
+4)get the node(pivot node) which is in min number of unbalanced triangles.
+5)get all the friends of pivot node in group A, and all the enemies of the pivot node in group B
+6)Display the Groups
+7)Calculate the expected error and actual error in edges of group and display it.
