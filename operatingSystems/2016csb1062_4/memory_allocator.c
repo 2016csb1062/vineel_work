@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+<<<<<<< HEAD
 #include <string.h>
 
 //functions declarations 
@@ -14,10 +15,20 @@ void zero_fill(void * ptr,size_t size);
 
 
 //structure to store meta_data of a block
+=======
+
+void *csl333_malloc(size_t size);
+void csl333_free(void *ptr);
+void* csl333_realloc(void* ptr, size_t size);
+void *csl333_malloc(size_t size);
+void * findFreedBlock(size_t size);
+
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 struct meta_data
 {
 	int is_free ;
 	size_t size;
+<<<<<<< HEAD
 	struct  meta_data * next ;
 	struct  meta_data * prev ;
 };
@@ -40,10 +51,26 @@ void *csl333_malloc(size_t size)
 		return freeBlock;
 	}
 
+=======
+	struct  meta_data * next ; 
+};
+
+struct meta_data * head;
+struct meta_data * tail;
+
+void *csl333_malloc(size_t size)
+{
+	void * freeBlock = findFreedBlock(size);
+	if(freeBlock != NULL)
+	{
+		return freeBlock;
+	}
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 	else
 	{
 		//create a temp Block
 		size_t total_size = sizeof(struct meta_data)+size;
+<<<<<<< HEAD
 		void * tempBlock = sbrk(total_size);
 
 		//zero_fill the block
@@ -53,25 +80,44 @@ void *csl333_malloc(size_t size)
 		{
 			return NULL;
 		}
+=======
+		printf("++++%d",sbrk(0));
+		printf("++++%d",total_size);
+		void * tempBlock = sbrk(total_size);
+		printf("++++%d",sbrk(0));
+		printf("++++%d",tempBlock);
+		printf("++++%d",sbrk(0));
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 		if(head == NULL)
 		{
 			head = tempBlock;
 			head -> is_free = 0;
 			head -> size = size;
 			head -> next = NULL;
+<<<<<<< HEAD
 			head -> prev = NULL;
 			tail = head;
 			printMetaData();
+=======
+			tail = head;
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 			return (void *)(head+1);
 		}
 
 		tail->next = tempBlock;
+<<<<<<< HEAD
 		tail->next->prev = tail;
+=======
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 		tail = tail->next;
 		tail->is_free = 0;
 		tail->size = size;
 		tail->next = NULL;
+<<<<<<< HEAD
 		printMetaData();
+=======
+
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 		return (void *)(tail+1);
 
 	}
@@ -80,6 +126,7 @@ void *csl333_malloc(size_t size)
 
 void * findFreedBlock(size_t size)
 {
+<<<<<<< HEAD
 	struct meta_data * temp_meta_data = head;
 	while(temp_meta_data != NULL)
 	{
@@ -182,4 +229,31 @@ int main(int argc, char const *argv[])
   *(a+1) = 3;
   printf("%d%d",*a,*(a+1));
   return 0;
+=======
+	return NULL;
+}
+
+void  csl333_free(void *ptr)
+{
+	printf("-------%d\n",ptr);
+	struct meta_data * temp_meta_data = (struct meta_data *) (ptr - sizeof(struct meta_data));
+	printf("-------%d\n",ptr + temp_meta_data->size);
+	if(ptr + temp_meta_data->size == sbrk(0))
+	{
+		sbrk(0-temp_meta_data->size-sizeof(struct meta_data));
+		return;
+	}
+	temp_meta_data->is_free = 1;
+	return;
+}
+
+int main()
+{
+	int * a = csl333_malloc(sizeof(int));
+	*a = 9;
+	printf("%d\n",*a);
+	printf("%d\n",sbrk(0));
+	csl333_free(a);
+	printf("%d\n",sbrk(0));
+>>>>>>> d6c99e383bf9c5a7f457e74f6aa033587ed14ec6
 }
