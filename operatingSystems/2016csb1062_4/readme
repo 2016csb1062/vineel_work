@@ -1,0 +1,35 @@
+Submitter name : Vineel Kumar Raj BE
+Roll No.: 2016csb1062
+Course : csl333
+
+====================================
+
+COMPILE PROGRAMME:
+
+gcc memory_allocator.c inputFile.c(the input file)
+
+RUN PROGRAMME:
+
+./a.out
+
+====================================
+
+DESCRIPTION:
+The programme contains the definition/implementation of three functions:
+-->csl333_malloc()
+-->csl333_realloc()
+-->csl333_free()
+
+Implementation:
+csl333_malloc(size_t size):
+--> it call findFreedBlock(size) which returns a freed block of given size or NULL if it doesnt finds
+--> if it does not find any it call sbrk() and creates a block of given size and returns the ponter to the begging of the block
+
+
+csl333_free(void * ptr)
+-->it changes the is_free parameter of the block to 1(True).then it checks if the neighbour block is freed,if it is ,then it merges.
+
+
+csl333_realloc(void* ptr, size_t size):
+--> first it uses csl333_malloc(size),then it copies the previous data to newly allocated block using memcopy(),then it call csl333_free(ptr);
+

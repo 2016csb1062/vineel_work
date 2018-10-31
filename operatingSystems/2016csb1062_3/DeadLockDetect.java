@@ -122,28 +122,26 @@ class DeadLockDetect
     	if(deadLockDetected)
     	{
     		System.out.println("DeadLock Detected !");
-    		System.out.println("The processes in the DeadLock are : ");
+    		System.out.println("The processes in the DeadLock are :- ");
             HashSet<Integer> resourcesInLock = new HashSet<Integer>();
     		for(int i=0;i<n;i++)
     		{
     			if(!processList.get(i).terminated)
     			{
-    				System.out.println(processList.get(i).id);
+                    System.out.print("Process : ");
+    				System.out.print(processList.get(i).id);
+                    System.out.print("\t Requested Resources That are not available :- ");       
                     for(int j=0;j<processList.get(i).requesting.length;j++)
                     {
                         if(processList.get(i).requesting[j]>resourcesLeftOut[j])
                         {
-                            resourcesInLock.add(j);
+                            System.out.print("R"+j+":"+(processList.get(i).requesting[j]-resourcesLeftOut[j])+" ");
                         }
                     }
+                    System.out.println("");
     			}
     		}
-            Iterator value = resourcesInLock.iterator();
-            System.out.println("Resources : "); 
-            while(value.hasNext())
-            {
-                System.out.println("R"+value.next());
-            }
+
     	}
 
     	else

@@ -2,7 +2,6 @@ submitter name: Vineel Kumar Raj BE
 Entry No : 2016csb1062
 
 =======================================
-
 Compile And Running :
 
 javac *.java
@@ -11,8 +10,10 @@ java DeadLockDetect fileFormat(csv/tsv) inputfile
 Ex:
 	java DeadLockDetect csv input.csv
 
+Note:
+file format should be mentioned as "csv" and "tsv".(first cmd line argument)
+any other string is considered as "tsv".
 ----------------------------------------
-
 Sample InputFormat:
 csv:
 Processes,Allocated,Requested,Available at time t1
@@ -26,12 +27,32 @@ Processes	Allocated	Requested	Available at time t1
 P1	{1,0,1}	{0,1,1}	{0,0,1}
 P2	{1,1,0}	{1,0,0}	
 P3	{0,1,0}	{0,0,1}	
-p4	{0,1,0}	{1,2,0}	
+p4	{0,1,0}	{1,2,0}
 
+
+
+Note:
+first line in the file is ignored. 
 -----------------------------------------
 
 Description:
 the programme checks the presense of deadlock in the system state present in the file.and if it is present it print the processes and resources that are in the deadlock state.
+
+output format:
+
+if deadlock not detected:
+DeadLock not detected!
+
+if detected:
+DeadLock Detected !
+The processes in the DeadLock are :-
+process : "processId"  Requested Resources That are not available : "ResourceId":"Extra number of resources requested that are not available."
+
+
+
+Note:
+resources id starts from 0.
+-----------------------------------------
 
 Algorithm:
 1)first programme parse the data in the file and store data into objects of process(processId,allocatedResources,RequestedResources) and array of integers(Available resources)
