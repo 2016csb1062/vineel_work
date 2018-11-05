@@ -39,7 +39,7 @@ int main(int argc,char ** argv)
 				temp+=1;
 			}
 			end = clock();
-			timeMat[i][j][0]=((double) (end - start)) / CLOCKS_PER_SEC;
+			timeMat[i][j][0]=n[i]/(((double) (end - start)) / CLOCKS_PER_SEC);
 
 
 			//write k byte at a time
@@ -52,7 +52,7 @@ int main(int argc,char ** argv)
 				temp = temp+k;
 			}
 			end = clock();
-			timeMat[i][j][1]=((double) (end - start)) / CLOCKS_PER_SEC;
+			timeMat[i][j][1]=n[i]/(((double) (end - start)) / CLOCKS_PER_SEC);
 
 
 			//read k bytes at a time
@@ -65,7 +65,7 @@ int main(int argc,char ** argv)
 				temp+=k;
 			}
 			end = clock();
-			timeMat[i][j][2]=((double) (end - start)) / CLOCKS_PER_SEC;
+			timeMat[i][j][2]=n[i]/(((double) (end - start)) / CLOCKS_PER_SEC);
 			//read 1 byte at a time;
 			temp = my_arr;
 			start = clock();
@@ -75,17 +75,21 @@ int main(int argc,char ** argv)
 				temp+=1;
 			}
 			end = clock();
-			timeMat[i][j][3]=((double) (end - start)) / CLOCKS_PER_SEC;
+			timeMat[i][j][3]=n[i]/(((double) (end - start)) / CLOCKS_PER_SEC);
 			free(my_arr);
+			printf("finished.. n=%zu k=%zu \n",n[i],K[j]);
 		}
 	}
 
 	FILE *fptr;
 	fptr = fopen("performanceMatrix.txt","w");
+	fprintf(fptr,"N(mb)\tK(b)\twrtie_1_byte/iteration(mb/sec)\twrtie_k_bytes/iteration(mb/sec)\tread_k_bytes/iteration(mb/sec)\tread_1_byte/iteration(mb/sec)\n");
 	for(int i =0;i<8;i++)
 	{
 		for(int j =0;j<6;j++)
 		{
+		    fprintf(fptr,"%zu\t",n[i]);
+		    fprintf(fptr,"%zu\t",K[j]); 
 			for(int k=0;k<4;k++)
 			{
 				fprintf(fptr,"%lf\t",timeMat[i][j][k]);
@@ -93,5 +97,13 @@ int main(int argc,char ** argv)
 			fprintf(fptr,"\n" );
 		}
 	}
+	
+	int maxi = 0;
+	int maxj = 0;
+	double maxS = 0;
+	int mini = 0;
+	int minj = 0;
+	double minS = 0;
+	
 	return 0;
 }
