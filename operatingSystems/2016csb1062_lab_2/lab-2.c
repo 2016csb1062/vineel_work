@@ -10,19 +10,31 @@ int main(int argc,char ** argv)
 		return -1;
 	}
 	int k = atoi(argv[1]);
-	int N = atoi(argv[2]);
-	char * my_arr = malloc(N*1024);
-	int number_of_writes = (N*1024)/k;
+	int f = atoi(argv[2]);
+	size_t N = f*1024;
+	printf("%zu\n",N);
+	char * my_arr = malloc(N);
+	int number_of_writes = (N)/k;
+	
 	char x = 'v';
 	char * temp = my_arr;
+
+	//write k byte at a time
 	for(int i=0;i<number_of_writes;i++)
 	{
-		memset(temp,x,k);
-		temp+=k;
+		memset(temp,x,k*sizeof(char));
+		temp[0] = '|';
+		temp = temp+k;
+		//printf("%p\n",temp);
 	}
+	temp = my_arr;
+	char tempX[k];
+	
+	//read k bytes at a time
 	for(int i=0;i<number_of_writes;i++)
 	{
-		printf("%c",my_arr[i]);
+		memcpy(tempX,temp,k*sizeof(char));
+		printf("%s\n",tempX);
 	}
 
 	return 0;
