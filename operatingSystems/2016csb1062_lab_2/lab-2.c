@@ -8,8 +8,8 @@ double cpu_time_used;
 
 int main(int argc,char ** argv)
 {
-	int n[]={10, 20, 40, 80, 160, 320, 640, 1280};
-	int K[]={10, 20, 30, 40, 50, 60};
+	size_t n[]={10, 20, 40, 80, 160, 320, 640, 1280};
+	size_t K[]={10, 20, 30, 40, 50, 60};
 
 	double timeMat[8][6][4];
 	char * my_arr;
@@ -17,9 +17,8 @@ int main(int argc,char ** argv)
 	{
 		for(int j=0;j<6;j++)
 		{
-			int k = atoi(argv[1]);
-			int n = atoi(argv[2]);
-			size_t N = n*1024*1024;
+			size_t k = K[j];
+			size_t N = n[i]*1024*1024;
 	
 			//giving memory to array
 			my_arr = malloc(N);
@@ -91,6 +90,7 @@ int main(int argc,char ** argv)
 			{
 				fprintf(fptr,"%lf\t",timeMat[i][j][k]);
 			}
+			fprintf(fptr,"\n" );
 		}
 	}
 	return 0;
