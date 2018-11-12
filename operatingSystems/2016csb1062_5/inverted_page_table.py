@@ -1,5 +1,7 @@
 import math
 from queue import Queue
+import random
+import sys
 
 class inverted_page_table:
 	def __init__(self,virtual_address_size, page_size, ram_size):
@@ -73,15 +75,37 @@ class page_entry:
 
 def simulate(virtual_address_size, page_size, ram_size, page_rep_algo, ref_addresses):
 	page_table = inverted_page_table(virtual_address_size,page_size,ram_size)
+	page_fault = 0;
+	if(page_rep_algo == 'fifo'):
+		page_rep_algo_func = page_table.FIFO;
+	elif(page_rep_algo == 'lfu'):
+		page_rep_algo_func = page_table.LFU;
+	else:
+		page_rep_algo_func = page_table.MFU;
 	for ref_address in ref_addresses:
 		binstring = (('{:0'+str(virtual_address_size)+'b}').format(ref_address))
 		page_addr = int(binstring[:page_table.ref_size],2)
 		offset = int(binstring[page_table.ref_size:],2)
+		print("--------------------------------------------------------")
 		print("Page number : "+str(page_addr)+ " offset : "+str(offset))
 		phy_addr = page_table.translate(page_addr,0,page_table.FIFO);
 		print("Frame number : "+str(phy_addr)+ " offset : "+str(offset))
-		print("Page Fault : "+ str(page_table.page_fault) )
+		print("Page Fault : "+ str(page_table.page_fault))
+		print("--------------------------------------------------------")
+		if(page_table.page_fault):
+			page_fault+=1;
 
-ref_addresses=[11111110,20,30]
+	return (page_fault/len(ref_addresses))*100;
 
-simulate(32,4,100,'fifo',ref_addresses)
+
+
+if __name__=="__main__":
+	virtual_address_size = int(sys.argv[1]);
+	page_size =int(sys.argv[2])
+	ram_size = int(sys.argv[3])
+	page_rep_algo = str(sys.argv[4])
+	ref_addresses = []
+	for i in range(10000):
+		ref_addresses+=[random.randint(0,2**virtual_address_size)];
+	print("page_fault percentage : "+str(simulate(virtual_address_size, page_size, ram_size, page_rep_algo, ref_addresses))+"%")
+
